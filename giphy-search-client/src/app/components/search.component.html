@@ -1,0 +1,25 @@
+<form #searchForm="ngForm" (ngSubmit)="submit()">
+  <mat-form-field>
+    <input matInput type="text" name="query" placeholder="Search" ngModel required>
+  </mat-form-field>
+  <button type="submit" mat-raised-button color="primary" [disabled]="searchForm.invalid">Submit</button>
+</form>
+<mat-grid-list cols="5" rowHeight="400px">
+  <mat-grid-tile
+    *ngFor="let image of images; let i = index"
+    [colspan]="1"
+    [rowspan]="1">
+    <div class="img-container">
+      <img [src]="image.images.downsized.url"/>
+      <button (click)="favorite(image.id)" mat-icon-button color="primary">
+        <mat-icon>favorite</mat-icon>
+      </button>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-paginator
+  #paginator="matPaginator"
+  [length]="length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions">
+</mat-paginator>
