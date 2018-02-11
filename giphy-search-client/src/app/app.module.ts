@@ -12,37 +12,38 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
 
-import {AppComponent} from './app.component';
-import {HomeComponent} from './components/home.component';
+import {AppComponent, UsernameDialog} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MainComponent} from './components/main.component';
-import {FavouritesComponent} from './components/favourites.component';
+import {FavoritesComponent} from './components/favorites.component';
 import {SearchComponent} from './components/search.component';
 import {GiphyService} from "./giphy.service";
 
 const ROUTES: Routes = [
-  {path: "", component: MainComponent},
-  // { path: "customers", component: CustomerListComponent },
-  // { path: "details/:custId", component: DetailsComponent },
-  {path: "**", redirectTo: '/', pathMatch: 'full'}
+  {path: "", redirectTo: 'search', pathMatch: 'full'},
+  {path: "search", component: SearchComponent},
+  {path: "favorites", component: FavoritesComponent},
+  {path: "**", redirectTo: 'search', pathMatch: 'full'}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    MainComponent,
-    FavouritesComponent,
-    SearchComponent
+    FavoritesComponent,
+    SearchComponent,
+    UsernameDialog,
+  ],
+  entryComponents: [
+    UsernameDialog
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(ROUTES),
+    RouterModule.forRoot(ROUTES, {useHash: true}),
     BrowserAnimationsModule,
     MatListModule,
     MatToolbarModule,
@@ -53,7 +54,8 @@ const ROUTES: Routes = [
     MatButtonModule,
     MatPaginatorModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [GiphyService],
   bootstrap: [AppComponent]

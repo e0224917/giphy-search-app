@@ -1,33 +1,17 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from "@angular/forms";
-import {GiphyImage, GiphyRequest} from "../model";
+import {Component, OnInit} from '@angular/core';
 import {GiphyService} from "../giphy.service";
-import {Subscription} from "rxjs/Subscription";
-import {MatPaginator, MatSnackBar} from "@angular/material";
-import {isNullOrUndefined} from "util";
+import {GiphyImage} from "../model";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css'],
+  selector: 'app-favourites',
+  templateUrl: './favorites.component.html',
+  styleUrls: ['./favorites.component.css']
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class FavoritesComponent implements OnInit {
 
-  @ViewChild('searchForm')
-  searchForm: NgForm;
-  currentRequest = <GiphyRequest>{};
-
-  //For grid list
-  images: GiphyImage[] = [];
+  favorites: GiphyImage[] = [];
   colNumber: number;
-
-  @ViewChild('paginator')
-  paginator: MatPaginator;
-  // MatPaginator Inputs
-
-  pageSizeOptions = [5, 10, 25, 100];
-
-  page: Subscription;
 
   constructor(private giphyService: GiphyService, public snackBar: MatSnackBar) {
     if (this.isMobile()) this.colNumber = 2;
@@ -35,62 +19,36 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.paginator.pageSize = 10;
-    //cached request will be restore
-    if (this.giphyService.lastRequest) {
-      this.currentRequest.query = this.giphyService.lastRequest.query;
-      this.paginator.pageSize = this.giphyService.lastRequest.limit;
-      this.paginator.pageIndex = this.giphyService.lastRequest.offset / this.giphyService.lastRequest.limit;
-      this.submit();
-    }
-    this.page = this.paginator.page.subscribe(() => {
-      this.submit();
-    });
-  }
-
-  ngOnDestroy() {
-    this.page.unsubscribe();
-  }
-
-  submit(): void {
-    this.currentRequest = <GiphyRequest>{
-      query: this.giphyService.lastRequest ? this.giphyService.lastRequest.query : this.searchForm.value.query,
-      limit: this.paginator.pageSize,
-      offset: this.paginator.pageIndex * this.paginator.pageSize
-    };
-    this.giphyService.search(this.currentRequest)
-      .then((response) => {
-          this.images = response.data;
-          this.paginator.length = response.pagination.total_count;
-        },
-        (error) => {
-          console.log('>>>> error: ', error);
+    if (this.giphyService.username) {
+      this.giphyService.getFavorites()
+        .then(result => {
+          this.giphyService.get(result).then(
+            (response) => {
+              this.favorites = response.data.reverse();
+            }
+          )
+        }, error => {
           this.snackBar.open('Error occurred. Please try again.', 'Ok', {
             duration: 1000
           });
-        }
-      );
+        })
+    }
   }
 
-  favorite(id: string) {
-    if (!this.giphyService.username) {
-      this.snackBar.open('Please set username first.', 'Ok', {
-        duration: 1000
-      });
-    } else {
-      this.giphyService.addToFavorites(id)
-        .then(() => {
-            this.snackBar.open('Added to favorites.', 'Ok', {
-              duration: 1000
-            });
-          },
-          () => {
-            this.snackBar.open('Error occurred. Please try again.', 'Ok', {
-              duration: 1000
-            });
-          }
-        );
-    }
+  remove(image: GiphyImage) {
+    this.giphyService.removeFromFavorites(image.id)
+      .then(result => {
+        this.snackBar.open('Item removed.', 'Ok', {
+          duration: 1000
+        });
+        this.favorites = this.favorites.filter(item => {
+          return item !== image;
+        })
+      }, error => {
+        this.snackBar.open('Error occurred. Please try again.', 'Ok', {
+          duration: 1000
+        });
+      })
   }
 
   isMobile(): boolean {

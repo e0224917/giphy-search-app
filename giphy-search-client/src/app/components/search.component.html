@@ -1,12 +1,13 @@
 <form #searchForm="ngForm" (ngSubmit)="submit()">
   <mat-form-field>
-    <input matInput type="text" name="query" placeholder="Search" ngModel required>
+    <input matInput type="text" name="query" placeholder="Search"
+           [(ngModel)] = "currentRequest.query" required>
   </mat-form-field>
   <button type="submit" mat-raised-button color="primary" [disabled]="searchForm.invalid">Submit</button>
 </form>
-<mat-grid-list cols="5" rowHeight="400px">
+<mat-grid-list [cols]="colNumber">
   <mat-grid-tile
-    *ngFor="let image of images; let i = index"
+    *ngFor="let image of images"
     [colspan]="1"
     [rowspan]="1">
     <div class="img-container">
@@ -19,7 +20,5 @@
 </mat-grid-list>
 <mat-paginator
   #paginator="matPaginator"
-  [length]="length"
-  [pageSize]="pageSize"
   [pageSizeOptions]="pageSizeOptions">
 </mat-paginator>

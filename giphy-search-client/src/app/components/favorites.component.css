@@ -1,0 +1,29 @@
+.img-container {
+  position: relative;
+}
+
+.img-container button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -45%);
+  display: none;
+}
+
+.img-container:hover img {
+  opacity: 0.5;
+}
+
+.img-container:hover button {
+  display: block;
+  z-index: 500;
+  width: 100px;
+  height: 100px;
+}
+
+.mat-icon {
+  alignment: center;
+  font-size: 80px;
+  width: 80px;
+  height: 24px;
+}

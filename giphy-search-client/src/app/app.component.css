@@ -1,0 +1,27 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.app-body {
+  min-height: 82%;
+}
+
+.footer {
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid rgba(0, 0, 0, .12);
+}
+
+.mat-tab-link {
+  width: 50%;
+  background-color: white;
+}
+
+[override] .mat-ink-bar {
+  top: 0;
+}
+
+[override] .mat-tab-nav-bar {
+  position: sticky;
+}

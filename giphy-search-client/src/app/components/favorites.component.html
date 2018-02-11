@@ -1,0 +1,13 @@
+<mat-grid-list [cols]="colNumber">
+  <mat-grid-tile
+    *ngFor="let image of favorites"
+    [colspan]="1"
+    [rowspan]="1">
+    <div class="img-container">
+      <img [src]="image.images.downsized.url"/>
+      <button (click)="remove(image)" mat-icon-button color="primary">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

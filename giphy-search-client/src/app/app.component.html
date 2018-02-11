@@ -1,3 +1,27 @@
-<mat-toolbar>{{ title }}</mat-toolbar>
-<router-outlet></router-outlet>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span>{{ title }}</span>
+    <span class="spacer"></span>
+    <span *ngIf="giphyService.username">{{giphyService.username}}</span>
+    <button
+      mat-icon-button
+      (click)="setUsername()">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar-row>
 
+</mat-toolbar>
+
+<div class="app-body">
+  <router-outlet></router-outlet>
+</div>
+
+<nav mat-tab-nav-bar class="footer">
+  <a mat-tab-link
+     *ngFor="let link of navLinks"
+     [routerLink]="link.path"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{link.label}}
+  </a>
+</nav>
